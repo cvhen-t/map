@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsx语法vue</title>
+</head>
+<script src="../../JS/vueJs/vue.js"></script>
+
+<body>
+
+    <div id="app">
+        <div id="divtest"></div>
+        <todo-item v-bind:todo="datalist"></todo-item>
+
+        <input type="text" v-model="fullName">
+    </div>
+
+    <script type="text/javascript">
+        var com = document.getElementById('divtest')
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li id="li">{{todo}}</li>',
+
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                datalist: [{
+                        id: 0,
+                        text: '蔬菜'
+                    },
+                    {
+                        id: 1,
+                        text: '奶酪'
+                    },
+                    {
+                        id: 2,
+                        text: '随便其它什么人吃的东西'
+                    }
+                ],
+                name1: 'chen',
+                name2: 'chao'
+            },
+            computed: {
+                fullName: {
+                    // getter
+                    get: function () {
+                        return 111
+                    },
+                    // // setter
+                    set: function (newValue) {
+                        // var names = newValue.split(' ')
+                        console.log(newValue);
+                        // this.name1 = names[0]
+                        // this.name2 = names[names.length - 1]
+                    }
+                }
+            }
+        })
+    </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Canvas Chart</title>
+        <style>
+            canvas {
+                background-color: #2e2e2e;
+                border: 1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="chartCanvas" width="400" height="200"></canvas>
+        <script>
+            const canvas = document.getElementById('chartCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Data points
+            const points = [
+                { x: 10, y: 127 },
+                { x: 50, y: 93 },
+                { x: 90, y: 103 },
+                { x: 130, y: 148 },
+                { x: 170, y: 173 },
+                { x: 210, y: 90 },
+                { x: 250, y: 80 },
+                { x: 290, y: 60 },
+                { x: 330, y: 130 },
+                { x: 370, y: 127 }
+            ];
+
+            // Draw the background
+            ctx.fillStyle = '#2E2E2E';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw horizontal dashed lines
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = '#60BEFF';
+            ctx.beginPath();
+            ctx.moveTo(0, 60);
+            ctx.lineTo(canvas.width, 60);
+            ctx.moveTo(0, 120);
+            ctx.lineTo(canvas.width, 120);
+            ctx.stroke();
+
+            // Draw vertical dashed line on the right
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 1, 0);
+            ctx.lineTo(canvas.width - 1, canvas.height);
+            ctx.stroke();
+
+            // Draw the curved line
+            ctx.setLineDash([]);
+            ctx.strokeStyle = '#60BEFF';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+
+            for (let i = 1; i < points.length; i++) {
+                const xc = (points[i].x + points[i - 1].x) / 2;
+                const yc = (points[i].y + points[i - 1].y) / 2;
+                ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+            }
+
+            ctx.quadraticCurveTo(
+                points[points.length - 1].x,
+                points[points.length - 1].y,
+                points[points.length - 1].x,
+                points[points.length - 1].y
+            );
+            ctx.stroke();
+
+            // Draw data points
+            ctx.fillStyle = '#60BEFF';
+            points.forEach((point) => {
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 3, 0, Math.PI * 2, true);
+                ctx.fill();
+            });
+        </script>
+    </body>
+</html>

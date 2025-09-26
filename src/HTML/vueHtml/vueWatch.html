@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsx语法watch</title>
+</head>
+<script src="../../JS/vueJs/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+
+<body>
+
+    <div id="app">
+        <!-- {{quest}} -->
+        <input type="text" v-model="quest">
+        <div>{{resop}}</div>
+        <!-- 测试model -->
+        <base-checkbox v-model="lovingVue" ></base-checkbox>
+        <!-- //插槽 -->
+        <navigation-link :data="{name:1}"></navigation-link>
+    </div>
+
+    <script type="text/javascript">
+
+//插槽
+Vue.component('navigation-link', {
+            data() {
+                return {
+              vlaue:'12312'
+            }},
+            props: {
+                checked: Boolean
+            },
+            mounted(){
+            console.log();
+            },
+            template: `
+            <div>
+                <slot>{{data}}</slot>
+            </div>
+            
+            
+            
+            `
+        })
+
+
+//model接受 prop
+Vue.component('base-checkbox', {
+            model: {
+                prop: 'checked',
+                event: 'change'
+            },
+            props: {
+                checked: Boolean
+            },
+            mounted(){
+            console.log();
+            },
+            template: `
+            <input  type="checkbox"  v-bind:checked="checked" v-on:change="$emit('change', $event.target.checked)" >`
+        })
+
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                quest: '12312',
+                resop: '',
+                lovingVue:false
+            },
+            created: function () {
+                this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+            },
+            watch: {
+                quest: function (newqest, oldquest) {
+                    this.resop = 'Waiting for you to stop typing...'
+                    this.debouncedGetAnswer()
+                }
+            },
+            methods: {
+                getAnswer: function () {
+                    this.resop = 'Thinking...'
+                    var vm = this
+                    axios.get('https://yesno.wtf/api')
+                        .then(function (response) {
+                            vm.resop = _.capitalize(response.data.answer)
+                        })
+                        .catch(function (error) {
+                            vm.resop = 'Error! Could not reach the API. ' + error
+                        })
+                }
+            }
+
+        })
+
+    </script>
+
+
+
+</body>
+
+</html>
